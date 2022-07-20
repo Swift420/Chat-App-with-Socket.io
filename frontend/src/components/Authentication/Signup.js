@@ -1,4 +1,5 @@
-import { FormControl, Input, VStack, FormLabel, InputRightElement, Button, InputGroup } from '@chakra-ui/react'
+import { FormControl, Input, VStack, FormLabel, InputRightElement, Button, InputGroup, } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
 
 const Signup = () => {
@@ -8,14 +9,53 @@ const Signup = () => {
     const [email, setEmail] = useState()
     const [confirmPassword, setConfirmPassword] = useState()
     const [password, setPassword] = useState()
-    const [pic, setPic] = useState()
-
+    const [pic, setPic] = useState();
+    const [loading, setloading] = useState(false)
+    const toast = useToast();
     const handleClick = () => setShow(!show)
     const handleClickConfirm = () => setShowConfirm(!showConfirm)
+    
 
     const postDetails = (pics) => {
+        setloading(true);
+        if(pics==undefined){
+            toast({
+                title: "Please Select an Image",
+                status: "warning",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom"
+            });
+            return;
 
+        }
+        if(pics.type === "image/jpeg" || pics.type === "image/png"){
+            const data = new FormData();
+            data.append("file",pics)
+            data.append("upload_preset", "chat-app")
+            data.append("cloud_name", "swift76");
+            fetch("https://api.cloudinary.com/v1_1/swift76/image/upload", {
+                method: "post",
+                body: data
+            }).then((res)=> res.json()).then(data => {
+                setPic(data.url.toString());
+                console.log(data.url.toString())
+                setloading(false)
+            }).catch((err)=> {
+                console.log(err)
+                setloading(false)
+            })
+        } else {
+            toast({
+                title: "Please Select an Image",
+                status: "warning",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom"
+            });
+        }
     }
+    //https://api.cloudinary.com/v1_1/:cloud_name/:action
     const submitHandler = () => {}
 
   return (
@@ -89,7 +129,7 @@ const Signup = () => {
         />
         </FormControl>
 
-        <Button colorScheme="blue" width="100%" style={{marginTop:15}} onClick={submitHandler}>
+        <Button colorScheme="blue" width="100%" style={{marginTop:15}} onClick={submitHandler} isLoading={loading}>
             Sign Up
         </Button>
 
