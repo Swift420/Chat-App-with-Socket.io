@@ -77,7 +77,7 @@ const Signup = () => {
         </InputGroup>
         </FormControl>
 
-         <FormControl id="pic" isRequired>
+         <FormControl id="pic" >
         <FormLabel>
             Upload your Picture
         </FormLabel>
