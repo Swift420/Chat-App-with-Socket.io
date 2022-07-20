@@ -5,7 +5,7 @@ const { chats } = require('./data/data');
 const app = express();
 dotenv.config();
 
-app.get('/', function(req, res) {
+app.get('/api/chat', function(req, res) {
     res.send(chats)
 })
 
