@@ -1,5 +1,11 @@
 const asyncHandler = require("express-async-handler")
 const User = require("../Models/userModel")
+const generateToken = require("../config/generateToken")
+
+
+
+
+
 const registerUser = asyncHandler(async(req,res) => {
 
     const {name, email, password, pic} = req.body
@@ -10,7 +16,7 @@ const registerUser = asyncHandler(async(req,res) => {
         throw new Error("Please enter all fields")
     }
 
-    const userExists = await User.findOne({ email: email})
+    const userExists = await User.findOne({ email})
 
     if(userExists) {
         res.status(400);
@@ -25,6 +31,7 @@ const registerUser = asyncHandler(async(req,res) => {
             name: user.name,
             email: user.email,
             pic: user.pic,
+            token: generateToken(user._id)
         })
     } else {
         
@@ -34,6 +41,9 @@ const registerUser = asyncHandler(async(req,res) => {
 
 
 });
+
+
+
 
 
 module.exports = {registerUser}
