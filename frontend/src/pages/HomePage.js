@@ -1,8 +1,30 @@
 import React from 'react'
+import { Box, Container, Text } from '@chakra-ui/react'
+
 
 const HomePage = () => {
   return (
-    <div>HomePage</div>
+    <Container maxW="xl" centerContent>
+      <Box
+         d="flex"
+        justifyContent="center"
+        p={3}
+        bg="white"
+        w="100%"
+        m="40px 0 15px 0"
+        borderRadius="lg"
+        borderWidth="1px"
+        
+      >
+        <Text fontSize="25" fontFamily="Work sans" color="Black">Chat App</Text>
+      </Box>
+      <Box bg="white" w="100%" p={4} borderRadius="lg" borderWidth="1px">
+        
+      </Box>
+       
+
+
+    </Container>
   )
 }
 
