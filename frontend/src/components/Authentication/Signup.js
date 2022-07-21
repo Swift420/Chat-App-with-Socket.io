@@ -1,6 +1,8 @@
 import { FormControl, Input, VStack, FormLabel, InputRightElement, Button, InputGroup, } from '@chakra-ui/react'
 import { useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
+import axios from 'axios'
+import {useHistory} from 'react-router-dom'
 
 const Signup = () => {
     const [show, setShow] = useState(false)
@@ -14,6 +16,7 @@ const Signup = () => {
     const toast = useToast();
     const handleClick = () => setShow(!show)
     const handleClickConfirm = () => setShowConfirm(!showConfirm)
+    const history = useHistory();
     
 
     const postDetails = (pics) => {
@@ -56,7 +59,68 @@ const Signup = () => {
         }
     }
     //https://api.cloudinary.com/v1_1/:cloud_name/:action
-    const submitHandler = () => {}
+    const submitHandler = async() => {
+        setloading(true);
+        if(!name || !email || !password || !confirmPassword){
+            toast({
+                title: "Please Fill all the fields",
+                status: "warning",
+                duration: 5000,
+                isClosable:true,
+                position: "bottom"
+
+            });
+            setloading(false);
+            return;
+        }
+
+        if(password !==confirmPassword){
+            toast({
+                title: "Passwords Fill all the fields",
+                status: "warning",
+                duration: 5000,
+                isClosable:true,
+                position: "bottom"
+
+            });
+            return;
+        }
+
+        try {
+            const config = {
+                headers: {
+                    'Content-type': "application/json",
+                },
+                 baseURL: 'http://localhost:5000',
+            }
+
+            const {data} = await axios.post("/api/user",{name,email,password,pic}, config);
+            toast({
+                title: "Registration Successful",
+                status: "success",
+                duration: 5000,
+                isClosable:true,
+                position: "bottom"
+
+            });
+
+            localStorage.setItem("userInfo", JSON.stringify(data));
+
+            setloading(false)
+            history.pushState('/chats')
+        } catch (error) {
+            toast({
+                title: "Error Occured!",
+                description: error.response.data.message,
+                status: "error",
+                duration: 5000,
+                isClosable:true,
+                position: "bottom"
+
+            });
+            setloading(false)
+        }
+    }
 
   return (
     <VStack spacing='5px' color="black">
